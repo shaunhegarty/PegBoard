@@ -129,6 +129,12 @@ public class PegBoard {
     	}*/
     }
     
+    
+    /**
+     * Contains all the logic involved in figuring out 
+     * the next move in the solution.
+     * Determines the correct move and calls move() to make it
+     */
     public void nextMove(){
     	//White can only move left, Black can only move right
     	//We keep track of the current direction
@@ -197,7 +203,12 @@ public class PegBoard {
     	}   */	
     }
 
-    
+    /**
+     * Determines if a move is allowed or not.
+     * 
+     * @param i is the index of the piece on which a move is being attempted
+     * @return 
+     */
     public boolean attemptMove(int i){
 		//For playing the game in the GUI. 
 		//Only performs the move if the move is valid. 
@@ -208,9 +219,15 @@ public class PegBoard {
 		return false;
 	}
 
+    /**
+     * Determines if all pieces to beyond the hole location are in 
+     * their final positions.
+     * 
+     * @return true if everything to *direction* side of the hole is 
+	 *	in the end state
+     */
 	private boolean isPartDone(){
-		//returns true if everything to *direction* side of the hole is 
-		//in the end state
+		
 		for(int i = hole - direction; i >= 0 && i < board.length ; i -= direction){
 			if(board[i] != direction){    			
 				return false;
@@ -220,6 +237,9 @@ public class PegBoard {
 		return true;
 	}
 
+	/**
+	 * Changes the current working direction
+	 */
 	private void changeDirection(){    	
 		if(direction == LEFT){
 			direction = RIGHT;
@@ -228,6 +248,9 @@ public class PegBoard {
 		}
 	}
 
+	/**
+	 * Performs the solution of the problem
+	 */
 	public void solve(){
     	while(!isFinished()){
     		nextMove();
@@ -235,6 +258,11 @@ public class PegBoard {
     	
     }
     
+	/**
+	 * Determines if all colours have moved from their initial 
+	 * positions to the other side of the board
+	 * @return
+	 */
     public boolean isFinished(){
     	if(board[board.length/2] != EMPTY){
     		return false;
@@ -268,7 +296,10 @@ public class PegBoard {
 	    return -1;
 	}
     
-    //Minimum moves to solve for a board of a given size
+    /**
+     * Minimum moves to solve for a board of a given size
+     * @return
+     */
 	public int minMoves(){
     	return minMoves(board.length);
     }
