@@ -1,5 +1,7 @@
+package pegboard;
 
 import java.awt.event.ActionEvent;
+
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -27,16 +29,21 @@ import javax.swing.SwingUtilities;
 		
 @SuppressWarnings("serial")
 public class PlayPegBoard extends JFrame {
+	////// INSTANCE VARIABLES //////
 	private GameBoard game;
 	private int size;
 	
-	
+	////// CONSTRUCTORS //////
+	/**
+	 * Creates a new GameBoard object at a default size of 11.
+	 * Sets up key listeners for the up and down keys. 
+	 */
 	public PlayPegBoard(){
 		setTitle("Play Super PegBoard");
 		size = 11; //default
 		game = new GameBoard(size);
 		
-		//Anonymous classes for key bindings
+		//Anonymous classes for key binding actions
 		Action upAction = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				size += 2;
@@ -59,11 +66,13 @@ public class PlayPegBoard extends JFrame {
 		InputMap inputMap = game.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
 		ActionMap actionMap = game.getActionMap();
 		
+		//Map the keypresses to the actions
 		inputMap.put(KeyStroke.getKeyStroke("UP"), "upAction");
 		actionMap.put("upAction", upAction);
 		inputMap.put(KeyStroke.getKeyStroke("DOWN"), "downAction");
 		actionMap.put("downAction", downAction);
 		
+		//Place the GameBoard JPanel onto the JFrame
 		add(game);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +81,11 @@ public class PlayPegBoard extends JFrame {
 		
 	}
 	
+	////// MAIN METHOD //////
+	/**
+	 * Main method which runs the program
+	 * @param args
+	 */
 	public static void main(String[] args){
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override

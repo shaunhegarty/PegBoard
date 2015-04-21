@@ -1,3 +1,4 @@
+package pegboard;
 /**This class initialises the pegboard and contains methods to 
  * provide a full solution, make individual moves and return various
  * pieces of information about the state of the board
@@ -57,6 +58,8 @@ public class PegBoard {
 		direction = LEFT;
 
 	}
+	
+	////// METHODS //////
 	
 	/**
 	 * Prints a text representation of the current board 
@@ -280,6 +283,10 @@ public class PegBoard {
     
     public int[] getBoard(){
     	return board;
+    }
+    
+    public int getSize(){
+    	return board.length;
     }
     
     public int getMoves(){

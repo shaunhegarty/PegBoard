@@ -1,3 +1,5 @@
+package pegboard;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -6,12 +8,24 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.JPanel;
 
+
+/**
+ * The GameBoard class sets up each of of the graphical components
+ * and draws them in a JPanel. It draws rectangles and colours them 
+ * based on the values stored in a PegBoard object.
+ * 
+ * This class also sets up the mouse listeners, places and colours 
+ * the individual components
+ * 
+ * @author Shaun Hegarty
+ *
+ */
 @SuppressWarnings("serial")
 public class GameBoard extends JPanel {
 	
+	//Set some values to keep some amount of consistency in the display
 	final float PEG_HEIGHT = 60f;
 	final float PEG_WIDTH = 60f;
 	final float PADDING = 5f;
@@ -23,32 +37,48 @@ public class GameBoard extends JPanel {
 	private Rectangle2D[] pegboard;
 	private Rectangle2D resetButton;	
 	private Rectangle2D solveButton;
-	private int[] board;
 	private PegBoard game;
+	private int size;
 	
-	public GameBoard(){
+	
+	////// CONSTRUCTORS //////
+	/**
+	 * Initialises the board to a default size of 11
+	 */
+	public GameBoard(){		
 		this(11); //default
 	}
 	
-	public GameBoard(int size){
+	/**
+	 * Creates a new PegBoard object and pulls out the board
+	 * @param initSize The number of spaces which will be on the board
+	 */
+	public GameBoard(int initSize){
+		size = initSize;
 		game = new PegBoard(size);
-		board = game.getBoard();
-		System.out.println(game.minMoves());
-		pegboard = new Rectangle2D[board.length];
-		this.addMouseListener(new PegMover());
+		pegboard = new Rectangle2D[size];
+		initBoard();
+		this.addMouseListener(new PegMover());		
+	}
+	
+	
+	/**
+	 * Reinitialises the game with the given initSize parameter
+	 * @param initSize The new size of the board
+	 */
+	public void remake(int initSize){
+		//remake the board with a new size
+		size = initSize;
+		game = new PegBoard(size);
+		pegboard = new Rectangle2D[size];
 		initBoard();
 	}
 	
-	public void remake(int size){
-		//remake the board when the size has to change
-		game = new PegBoard(size);
-		board = game.getBoard();
-		pegboard = new Rectangle2D[board.length];
-		initBoard();
-	}
-	
+	/**
+	 * Sets up the board with position of each object
+	 */
 	private void initBoard(){
-		//initialise the game board
+		
 		for(int i = 0; i < pegboard.length; i++){
 			this.pegboard[i] = new Rectangle2D.Float(PADDING + i*PEG_WIDTH + i*PADDING, PADDING, PEG_WIDTH, PEG_HEIGHT);
 		}
@@ -58,6 +88,11 @@ public class GameBoard extends JPanel {
 		
 	}
 	
+	/**
+	 * Performs the drawing of each component in appropriate 
+	 * colours, fonts etc. along with the text for each button
+	 * @param g
+	 */
     private void doDrawing(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
@@ -72,7 +107,7 @@ public class GameBoard extends JPanel {
         g2d.setRenderingHints(rh);
         
         //Draw pegs
-        board = game.getBoard();
+        int[] board = game.getBoard();
         for(int i = 0; i < pegboard.length; i++){
        	
         	if(i < 0 || i >= board.length || board[i] == EMPTY){
@@ -108,21 +143,28 @@ public class GameBoard extends JPanel {
     	doDrawing(g);
     }
 	
+    
+    /**
+     * Accessor for board size
+     * @return
+     */
     public int getBoardSize(){
-    	return board.length;
+    	return size;
     }
     
     /**
      * Inner class which manages the clickable objects and animates
      * (in a rudimentary fashion) the solving of the board
-     * @author Shaun
+     * @author Shaun Hegarty
      *
      */
     class PegMover extends MouseAdapter implements Runnable{
-    	//Set up mouse listener for clickable objects
     	
 		Thread solver;
     	
+		/**
+		 * Set up mouse listener for clickable objects
+		 */
 		@Override
 		public void mousePressed(MouseEvent e){
 			int x = e.getX();
@@ -145,8 +187,7 @@ public class GameBoard extends JPanel {
 			//Click reset button
 			if(resetButton.contains(x, y)){
 				System.out.println("Resetting");
-				game = new PegBoard(board.length);
-				board = game.getBoard();
+				game = new PegBoard(size);
 				repaint();
 			}
 			
@@ -158,15 +199,17 @@ public class GameBoard extends JPanel {
 			}
 		}
     
+		/**
+		 * sets up a basic animation for solving 
+    	 * no animation for peg movement, just step forward a frame
+    	 * for each individual move
+		 */
     	@Override
 		public void run(){
-    		//sets up a basic animation for solving 
-    		//no animation for peg movement, just step forward a frame
-    		//for each individual move
+    		//
     		
     		//Reset the board when solving
-			game = new PegBoard(board.length);
-			board = game.getBoard();
+			game = new PegBoard(size);
 			//Run it in 10 seconds or 200ms per move, whichever is shorted.
 			long minFrameTime = 400;
 			long timePerMove = (10000/game.minMoves() < minFrameTime) ? 10000/game.minMoves() : minFrameTime;
@@ -174,7 +217,6 @@ public class GameBoard extends JPanel {
 				repaint();
 				int curr = game.getMoves();
 				game.nextMove();
-				board = game.getBoard();
 				try{
 					if(timePerMove > 15 && curr != game.getMoves()){
 						//Delay when the 
@@ -184,9 +226,6 @@ public class GameBoard extends JPanel {
 				
 			}
 		}
-		
-		public void movePeg(Rectangle2D peg, float increment){
-			peg.setRect(peg.getX() - increment, peg.getY(), peg.getWidth(), peg.getHeight());
-		}
+
     }
 }
