@@ -13,9 +13,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
- * 
- * @author Shaun Hegarty
- * 
  * This class runs the GUI for the peg board. It allows the user
  * to watch the the computer solve the board or to attempt it 
  * themselves.
@@ -23,7 +20,10 @@ import javax.swing.SwingUtilities;
  * It does not permit the user to perform any illegal moves. 
  * The board can be reset by clicking the Reset button.
  * The board can be solved by clicking the Solve button.
- * The board can be resized by pressing up or down on the keyboard
+ * The board can be resized by pressing up or down on the keyboard.
+ * 
+ * @author Shaun Hegarty
+ * 
  *
  */
 		

@@ -281,18 +281,37 @@ public class PegBoard {
     
     ////// Accessors /////////////
     
+    
+    /**
+     * Returns the array containing the board information
+     * @return
+     */
     public int[] getBoard(){
     	return board;
     }
     
+    
+    /**
+     * Returns the size of the board
+     * @return
+     */
     public int getSize(){
     	return board.length;
     }
     
+    
+    /**
+     * Returns the current number of moves  made
+     * @return
+     */
     public int getMoves(){
     	return moves;
     }
     
+    /**
+     * Returns the current index of the hole
+     * @return
+     */
     public int getHoleIndex(){
 		//return the current index of the empty space on the board
 	    for(int i = 0; i < board.length; i++){
@@ -304,22 +323,27 @@ public class PegBoard {
 	}
     
     /**
-     * Minimum moves to solve for a board of a given size
+     * Minimum moves to solve for the current board
      * @return
      */
 	public int minMoves(){
     	return minMoves(board.length);
     }
     
-    public int minMoves(int curr){
-    	if(curr%2 == 0){
+	/**
+	 * Minimum number of moves to solve a board of a given size.
+	 * @param curr Size of the board
+	 * @return
+	 */
+    public int minMoves(int size){
+    	if(size%2 == 0){
     		System.out.println("Board size must be odd.");
     		return 0;
     	}
-    	if(curr < 3){
+    	if(size < 3){
     		return 0;
     	} else {
-    		return minMoves(curr - 2) + curr;
+    		return minMoves(size - 2) + size;
     	}
     }
 }
