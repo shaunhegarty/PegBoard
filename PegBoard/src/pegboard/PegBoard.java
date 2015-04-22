@@ -78,7 +78,7 @@ public class PegBoard {
                 default: out = "";
                             break;                            
             }
-            System.out.print(out + " ");
+            System.out.print(out + "");
             
         }
         System.out.println("");
