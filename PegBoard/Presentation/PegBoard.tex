@@ -1,0 +1,263 @@
+
+
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{wrapfig}
+
+\usecolortheme{beaver}
+\useoutertheme{infolines}
+\useinnertheme{circles}
+\definecolor{bluish}{RGB}{20,100,200}
+\setbeamercolor{frametitle}{fg=bluish}
+\setbeamercolor{block title}{fg=bluish}
+\setbeamercolor{section in head/foot}{bg=bluish}
+\setbeamercolor{author in head/foot}{bg=bluish}
+\setbeamercolor{title}{fg=bluish, bg=white}
+\setbeamercolor{title in head/foot}{fg=bluish}
+\setbeamercolor{date in head/foot}{fg=bluish}
+
+
+\begin{document}
+
+\newcommand{\tab}{\hspace*{0.4in}} %Paragraph indent
+\newcommand{\spc}{\hspace{5pt}} %Word spacing
+\newcommand{\vspc}{\vspace*{0.23in}\\} %Interparagraphical jump (skips a line)
+
+\newcommand{\bd}{\textbf} %Bold
+\newcommand{\ita}{\textit} %Italic
+\newcommand{\ti}{\bf \LARGE} %Heading
+\newcommand{\blt}{\begin{itemize}} %Bullet points begin
+\newcommand{\finblt}{\end{itemize}} %Bullet Points end.
+\newcommand{\eq}{\begin{equation}\label} %numbered equations
+\newcommand{\eqf}{\end{equation}}
+
+\newcommand{\pic}[4]{
+		\begin{wrapfigure}[#1]{#2}[0px]{#3px}
+		\includegraphics[width=#3px,height=300px,keepaspectratio=true]{#4} 			
+		\end{wrapfigure}}
+		%Form: \pic{height in lines}{Position, left or right entered: l or r}{width in pixels}{Filename}
+		
+\title{Java Assignment: Peg Board}
+\author{Shaun Hegarty}
+\institute[DCU]{Dublin City University}
+
+\section{Intro}
+
+		\frame{\titlepage}
+
+
+	\begin{frame}
+		\frametitle{Problem Definition: The Peg Board}
+		\begin{figure}
+		\includegraphics[width=10cm]{pegboardlayout}
+		\end{figure}
+		Consider a board with holes in which coloured pegs can be placed. For this problem we have: 
+		\begin{itemize}
+			\item pegs of two colours
+			\item an equal number of each
+			\item a board with enough spaces for all pegs
+			\item one additional space which allows for movement
+		\end{itemize}
+		Rules:
+		\begin{itemize}
+			\item A peg adjacent to the space may move into it
+			\item A peg may jump over a peg adjacent to the space into that space
+		\end{itemize}	
+		
+	\end{frame}
+		
+\section{Design}
+	\begin{frame}
+		\frametitle{Design: Breaking it down}
+		The aim is to move all pegs of one colour to the other side of the board in the minimum number of steps
+		while following the rules.
+		
+		\begin{figure}
+		\includegraphics[height=4.5cm]{pegboardmoves}
+		\end{figure}
+		
+		Given the rules we can see that there are only four moves possible at any one time. 
+		
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design: Approaching an Algorithm}
+		The problem was solved manually numerous times to determine a pattern.
+		\blt
+			\item Initial algorithm was effective but inefficient
+			\item However, continued efforts revealed a best case algorithm
+		\finblt
+		\vfill
+		I determined that the minimum number of steps for a board of a given size could be calculated with following definition:
+		\[
+		f(n) = 
+			\begin{cases} 
+				f(n - 2) + n & \textrm{if}\; n \geq 3 \;\textrm{and}\; n \;\textrm{odd}\\
+				0 & \textrm{if}\; n < 3
+		 	\end{cases}
+		\]
+		where n is the number of spaces on the board.		
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design: The Algorithm I - Conditions and Rules}
+		\textbf{Starting conditions:} 
+		\begin{itemize}
+		\item The board is set with the hole in the middle
+		\item Pegs on either side will be made of one colour only. 
+		\item We have a predecided starting direction/colour of which we keep track. 
+		\end{itemize}
+		
+		When determining the next move to be made the algorithm uses the following rules:
+		\begin{itemize}
+			\item Pieces of the colour on the left, can only make moves to the right, and vice versa
+			\item Thus the current direction of moves is tied to the colour
+			\item Prioritize moves of size two, then one. 
+			\item If no move can be made in the current direction, change direction
+			\item Direction is stored simply as +1 or -1. 
+		\end{itemize}
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design: The Algorithm II - The Pseudocode}
+		The solving loop:
+		\begin{itemize}
+			\item[] while (!finished)
+			\begin{itemize}
+				\item[] nextMove()
+			\end{itemize}		
+		\end{itemize}
+		\bigskip
+		nextMove() method:
+		\begin{itemize}
+			\item[] \textbf{if} (current colour can jump over a different colour into hole (in an allowed direction))
+			\begin{itemize}
+				\item[] move(2 * direction)
+			\end{itemize}	
+			\item[] \textbf{else if}	(current colour can move into the hole \& be placed adjacent 
+			to a different colour (in an allowed direction))
+			\begin{itemize}
+				\item[] move(1 * direction)
+			\end{itemize}
+			
+			\item[] \textbf{else if}	((hole is at edge of board \& direction is away from the edge of the board) \\
+			OR (pieces beyond the space are all in their final positions))
+			\begin{itemize}
+				\item[] move(1 * direction)
+			\end{itemize}
+			\item[] \textbf{else} 
+			\begin{itemize}
+				\item[] change direction
+			\end{itemize}
+
+		\end{itemize}
+		
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design: The Algorithm III - A New Pattern Emerges}	
+		\begin{columns}[T]
+			\begin{column}{.5\textwidth}
+				\begin{block}{Another pattern}
+				Having run my algorithm a number of times and printing the board with each step, 
+				this symmetric zigzag pattern becomes apparent. \\\medskip
+				My solution uses the hole as a reference frame and ignores everything outside
+				of that frame. If instead I took the perspective of the board as a whole I would 
+				have taken this approach
+				\end{block}
+			\end{column}
+			
+			\begin{column}{.5\textwidth}
+				\begin{block}{The Zigzag}
+				\includegraphics[width=3cm]{pegboardsolved}
+				
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+
+\section{Demo}
+	\begin{frame}
+		\frametitle{Program Demo and that little bit more}
+		To complement the solution I created a GUI in which the user can both play the game, or 
+		watch the solution presented step by step. \\
+		\vfill
+		The user can click on any piece, if this piece can make a valid move into the hole, it will. \\
+		\vfill
+		The user can also increase or decrease the size of the board, and reset the board at any time. 
+		
+	\end{frame}
+\section{Limitations \& Future Work}
+	\begin{frame}
+		\frametitle{Limitations \& Future Work}
+		Limitations
+		\blt
+			\item The algorithm does not solve the puzzle for an incomplete non-optimal solution. \\
+			\tab i.e. if the algorithm was tasked finishing a game in which someone had made a move which
+			 would not lead to a solution in the minimum number of steps, it would fail
+		\finblt
+		
+		Future Work
+		\blt
+			\item Make implementations of alternate algorithms 
+			\item Make the algorithm work for any starting point
+			\item The problem can be expanded in numerous ways, such as to a 2D or 3D board which still 
+			only has one space for movement
+			
+		\finblt
+	\end{frame}
+\section{Reflection}
+	\begin{frame}
+		\frametitle{Reflection: What did I learn?}
+
+		\blt
+			\item Need to step back and look at the bigger picture more often. 
+			\item Sometimes miss 
+			more obvious patterns by breaking things down too quickly.
+			\vfill
+			\item I used this assignment as a vehicle to learn about the Graphics2D library in Java. 
+			\item In the process I learned about key bindings, mouse listeners and even a little bit about 
+			threads and concurrency. 
+		\finblt
+		
+
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Reflection: What could I have learned?}
+		What could I have learned?
+		\blt
+			\item I only acquired the information I needed to make threads work in my program
+			\item I know I didn't touch on vast areas of concurrency such as
+			\blt
+				\item multithreading
+				\item resource locking
+				\item synchronisation
+			\finblt 
+			and more to tackle before I would consider myself to be approaching competency in that area. 
+			\item I toyed with animating the blocks moving to each new location. I feel it was 
+			feasible but (as far as I could tell) I would have had to change my implementation of the 
+			pegboard class to make it work effectively. 
+		\finblt
+	\end{frame}
+\section{Conclusion}	
+	\begin{frame}
+		\frametitle{Conclusion}
+		I successfully created an application which could solve the given pegboard problem.\\\medskip
+		Additionally I created a GUI which allowed the user to attempt to solve it themselves
+		or watch the program solve it. \\\medskip
+		I learned a great deal of new content for the latter part as well as some areas in which I can improve myself. 
+		
+		\bd{Resources:}
+		\blt 
+			\item Mouse listeners and displaying 2D objects http://zetcode.com/gfx/java2d/hitmove/
+			\item Key Bindings http://tinyurl.com/n3ud95r
+		\finblt
+	\end{frame}
+
+\end{document}
