@@ -1,3 +1,5 @@
+/*Screencast https://youtu.be/aIoD-PvHgU8 */
+
 package pegboard;
 
 import java.io.BufferedWriter;
@@ -23,13 +25,13 @@ public class PegBoard {
 	private int minMoves;
 	private int hole;
 	private int direction;
-	//If n = total slots (n - 1 pegs + 1 space)
-	//Total required moves f => f(n) = f(n-2) + n
-	//And f(n) = 0 for n<3; n >= 3 and is an odd number
-	//if input n is even, it is upped to the next odd number.
+	/*If n = total slots (n - 1 pegs + 1 space)
+	* Total required moves f => f(n) = f(n-2) + n
+	* And f(n) = 0 for n<3; n >= 3 and is an odd number
+	* if input n is even, it is upped to the next odd number.*/
 	
 	
-	//Some constants
+	//Some constants//
 	//Convenient representations of the colours, empty space, directions
 	public final int EMPTY = 0;
 	public final int WHITE = 1;
@@ -40,8 +42,8 @@ public class PegBoard {
 	private final int RIGHT = -1;
 
 	/**
-	 * The main method in this class is primarily data collection. 
-	 * It sends writes time, moves, and size data to a CSV file.
+	 * The main method in this class is now primarily data collection. 
+	 * It writes time, moves, and size data to a CSV file.
 	 * The PlayPegBoard class contains the method for playing the game
 	 * @param args
 	 */
@@ -69,19 +71,27 @@ public class PegBoard {
 	
 	
 	////// CONSTRUCTOR //////
+	/**
+	 * Sets up the board all pegs of one colour on the left, another on the right
+	 * and separated by a space
+	 */
 	public PegBoard(int n){
-		//Setup the board
+		//If an even number is taken in, boost it to the next odd number
 		n = 2*(n/2) + 1;
+		
 		board = new int[n];
 		//Black on the left
 		for(int i = 0; i < n/2; i++){
 			board[i] = BLACK;
 		}
+		//Space in the middle
 		hole = n/2;
 		board[hole] = EMPTY;
+		//White on the right
 		for(int i = n/2 + 1; i < n; i++){
 			board[i] = WHITE;
 		}	
+		//Specify starting direction
 		direction = LEFT;
 		minMoves = minMoves();
 	}
@@ -127,7 +137,7 @@ public class PegBoard {
         board[indexB] = temp;
         moves++;
         
-        //displayPegs();
+        displayPegs();
         
     }
     
@@ -314,9 +324,35 @@ public class PegBoard {
     	return true;
     }
     
+    
+    /**
+     * Minimum moves to solve for the current board
+     * @return
+     */
+	public int minMoves(){
+    	return minMoves(board.length);
+    }
+    
+	/**
+	 * Minimum number of moves to solve a board of a given size.
+	 * @param curr Size of the board
+	 * @return
+	 */
+    public int minMoves(int size){
+    	if(size%2 == 0){
+    		System.out.println("Board size must be odd.");
+    		return 0;
+    	}
+    	if(size < 3){
+    		return 0;
+    	} else {
+    		return minMoves(size - 2) + size;
+    	}
+    }
+    
+    
     ////// Accessors /////////////
-    
-    
+        
     /**
      * Returns the array containing the board information
      * @return
@@ -358,31 +394,12 @@ public class PegBoard {
 	}
     
     /**
-     * Minimum moves to solve for the current board
+     * Returns the minimum moves to solve board from the starting position
      * @return
      */
-	public int minMoves(){
-    	return minMoves(board.length);
+    public int getMinMoves(){
+    	return minMoves;
     }
     
-	/**
-	 * Minimum number of moves to solve a board of a given size.
-	 * @param curr Size of the board
-	 * @return
-	 */
-    public int minMoves(int size){
-    	if(size%2 == 0){
-    		System.out.println("Board size must be odd.");
-    		return 0;
-    	}
-    	if(size < 3){
-    		return 0;
-    	} else {
-    		return minMoves(size - 2) + size;
-    	}
-    }
 }
 
-/*    	long beforeTime = System.nanoTime();
-    	long afterTime = System.nanoTime();
-    	System.out.println("Time taken: " + (afterTime - beforeTime) + " ns");*/

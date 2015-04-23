@@ -1,3 +1,5 @@
+/*Screencast https://youtu.be/aIoD-PvHgU8 */
+
 package pegboard;
 
 import java.awt.event.ActionEvent;
@@ -43,7 +45,8 @@ public class PlayPegBoard extends JFrame {
 		size = 11; //default
 		game = new GameBoard(size);
 		
-		//Anonymous classes for key binding actions
+		//Anonymous classes for key binding actions. Rebuild the board
+		//with a different size.
 		Action upAction = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				size += 2;
@@ -67,9 +70,9 @@ public class PlayPegBoard extends JFrame {
 		ActionMap actionMap = game.getActionMap();
 		
 		//Map the keypresses to the actions
-		inputMap.put(KeyStroke.getKeyStroke("UP"), "upAction");
-		actionMap.put("upAction", upAction);
+		inputMap.put(KeyStroke.getKeyStroke("UP"), "upAction");		
 		inputMap.put(KeyStroke.getKeyStroke("DOWN"), "downAction");
+		actionMap.put("upAction", upAction);
 		actionMap.put("downAction", downAction);
 		
 		//Place the GameBoard JPanel onto the JFrame

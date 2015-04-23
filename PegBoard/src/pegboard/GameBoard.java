@@ -1,3 +1,5 @@
+/*Screencast https://youtu.be/aIoD-PvHgU8 */
+
 package pegboard;
 
 import java.awt.Color;
@@ -127,14 +129,18 @@ public class GameBoard extends JPanel {
         g2d.fill(solveButton);
         
         //Display button text within the buttons
-        g2d.setFont(new Font("Arial", Font.BOLD, 28));
+        int fontSize = 28;
+        g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
         g2d.setColor(new Color(240, 240, 240));
-        g2d.drawString("RESET", (float) resetButton.getX() + PADDING, (float)(resetButton.getY() + 0.5*(resetButton.getHeight() + g2d.getFont().getSize())));
-        g2d.drawString("SOLVE", (float) solveButton.getX() + PADDING, (float)(solveButton.getY() + 0.5*(solveButton.getHeight() + g2d.getFont().getSize())));
+        //I just fiddled with these values until they were in decent enough place
+        g2d.drawString("RESET", (float) resetButton.getX() + 8*PADDING, (float)(resetButton.getY() + 0.47*(PEG_HEIGHT + fontSize)));
+        g2d.drawString("SOLVE", (float) solveButton.getX() + 8*PADDING, (float)(solveButton.getY() + 0.47*(PEG_HEIGHT + fontSize)));
         
         //Display number of moves made
         g2d.setColor(dark);
-        g2d.drawString("Moves [" + game.getSize() + "] : " + game.getMoves() + " (" + game.minMoves()+ ") ", (float) (solveButton.getX() + solveButton.getWidth() + 2*PADDING), (float)(solveButton.getY() + 0.5*(solveButton.getHeight() + g2d.getFont().getSize())));
+        g2d.drawString("Board size: " + game.getSize() + " | " + "Moves: " + game.getMoves() + " (" + game.minMoves()+ ") ", 
+        		(float) (solveButton.getX() + solveButton.getWidth() + 2*PADDING), 
+        		(float) (solveButton.getY() + 0.5*(solveButton.getHeight() + g2d.getFont().getSize())));
         
     }
     
@@ -191,10 +197,11 @@ public class GameBoard extends JPanel {
 				repaint();
 			}
 			
-			//Click solve button
+			//Click solve button runs the solver thread which animates 
+			//the solution
 			if(solveButton.contains(x, y)){
 				System.out.println("Solving");
-				game.solve();
+				//game.solve();
 				solver = new Thread(this);
 				solver.start();
 			}
@@ -213,7 +220,8 @@ public class GameBoard extends JPanel {
 			game = new PegBoard(size);
 			//Run it in 10 seconds or 200ms per move, whichever is shorted.
 			long minFrameTime = 400;
-			long timePerMove = (1000/game.minMoves() < minFrameTime) ? 1000/game.minMoves() : minFrameTime;
+			long animDuration = 10000;
+			long timePerMove = (animDuration/game.minMoves() < minFrameTime) ? animDuration/game.minMoves() : minFrameTime;
 			while(!game.isFinished()){
 				repaint();
 				int curr = game.getMoves();
