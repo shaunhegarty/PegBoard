@@ -134,7 +134,7 @@ public class GameBoard extends JPanel {
         
         //Display number of moves made
         g2d.setColor(dark);
-        g2d.drawString("Moves: " + game.getMoves() + " (" + game.minMoves()+ ") ", (float) (solveButton.getX() + solveButton.getWidth() + 2*PADDING), (float)(solveButton.getY() + 0.5*(solveButton.getHeight() + g2d.getFont().getSize())));
+        g2d.drawString("Moves [" + game.getSize() + "] : " + game.getMoves() + " (" + game.minMoves()+ ") ", (float) (solveButton.getX() + solveButton.getWidth() + 2*PADDING), (float)(solveButton.getY() + 0.5*(solveButton.getHeight() + g2d.getFont().getSize())));
         
     }
     
@@ -194,6 +194,7 @@ public class GameBoard extends JPanel {
 			//Click solve button
 			if(solveButton.contains(x, y)){
 				System.out.println("Solving");
+				game.solve();
 				solver = new Thread(this);
 				solver.start();
 			}
@@ -212,7 +213,7 @@ public class GameBoard extends JPanel {
 			game = new PegBoard(size);
 			//Run it in 10 seconds or 200ms per move, whichever is shorted.
 			long minFrameTime = 400;
-			long timePerMove = (10000/game.minMoves() < minFrameTime) ? 10000/game.minMoves() : minFrameTime;
+			long timePerMove = (1000/game.minMoves() < minFrameTime) ? 1000/game.minMoves() : minFrameTime;
 			while(!game.isFinished()){
 				repaint();
 				int curr = game.getMoves();

@@ -1,4 +1,10 @@
 package pegboard;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**This class initialises the pegboard and contains methods to 
  * provide a full solution, make individual moves and return various
  * pieces of information about the state of the board
@@ -14,6 +20,7 @@ public class PegBoard {
 	////// INSTANCE VARIABLES //////////
 	private int[] board;
 	private int moves;
+	private int minMoves;
 	private int hole;
 	private int direction;
 	//If n = total slots (n - 1 pegs + 1 space)
@@ -32,16 +39,36 @@ public class PegBoard {
 	private final int LEFT = 1;
 	private final int RIGHT = -1;
 
-	
-	/*public static void main(String[] args){
+	/**
+	 * The main method in this class is primarily data collection. 
+	 * It sends writes time, moves, and size data to a CSV file.
+	 * The PlayPegBoard class contains the method for playing the game
+	 * @param args
+	 */
+	public static void main(String[] args){
 		
 		PegBoard pegs = new PegBoard(11);
-		pegs.displayPegs();
-		pegs.solve();
-	}*/
+		//pegs.displayPegs();
+		try{
+            File newFile = new File("pegboarddata2.csv");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(newFile.getAbsoluteFile()));
+            bw.write("Size, Moves, Time(ns)");
+            bw.newLine();
+            for(int i = 101; i <= 10001; i+=100){
+            	pegs = new PegBoard(i);
+            	bw.write(pegs.solve());
+            	bw.newLine();
+            }
+            
+            bw.close();
+		} catch (IOException e){
+			System.out.println("failed");
+		}
+		
+	}
 	
 	
-	////// CONSTRUCTOR ///////////////
+	////// CONSTRUCTOR //////
 	public PegBoard(int n){
 		//Setup the board
 		n = 2*(n/2) + 1;
@@ -56,7 +83,7 @@ public class PegBoard {
 			board[i] = WHITE;
 		}	
 		direction = LEFT;
-
+		minMoves = minMoves();
 	}
 	
 	////// METHODS //////
@@ -100,8 +127,8 @@ public class PegBoard {
         board[indexB] = temp;
         moves++;
         
-        displayPegs();
-        hole = getHoleIndex();
+        //displayPegs();
+        
     }
     
     
@@ -113,8 +140,9 @@ public class PegBoard {
     private void move(int move){    	
     	try{
     		swap(hole + move, hole);
+    		hole = hole + move;
     	} catch (ArrayIndexOutOfBoundsException e){
-    		System.out.println("Impossible move");
+    		System.out.println("Impossible move attempted.");
     	}
     	//4 possible moves about the empty spot
     	//Unnecessary complexity but was helpful in conveying my original logic
@@ -252,15 +280,22 @@ public class PegBoard {
 	}
 
 	/**
-	 * Performs the solution of the problem
+	 * Performs the solution of the pegboard problem.
+	 *
+	 * @return A string for the purposes of data collection
 	 */
-	public void solve(){
-    	while(!isFinished()){
+	public String solve(){
+		long beforeTime = System.nanoTime();
+		//while(!isFinished()){ //Not as fast
+    	while(moves < minMoves){ 
     		nextMove();
     	}
+    	long afterTime = System.nanoTime();
+    	return (board.length + ", " + moves + ", " + (afterTime - beforeTime));
     	
     }
-    
+
+	
 	/**
 	 * Determines if all colours have moved from their initial 
 	 * positions to the other side of the board
@@ -275,7 +310,7 @@ public class PegBoard {
     			return false;
     		}
     	}
-    	System.out.println("Done in " + moves + " !");
+    	//System.out.println("Done in " + moves + " !");
     	return true;
     }
     
