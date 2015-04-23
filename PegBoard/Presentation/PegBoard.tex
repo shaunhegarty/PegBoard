@@ -79,7 +79,7 @@
 			\item a board with enough spaces for all pegs
 			\item one additional space which allows for movement
 		\end{itemize}
-		Rules:
+		Movement rules:
 		\begin{itemize}
 			\item A peg adjacent to the space may move into it
 			\item A peg may jump over a peg adjacent to the space into that space
@@ -87,6 +87,16 @@
 		
 	\end{frame}
 		
+	\begin{frame}
+		\frametitle{Problem Definition: What makes it interesting?}
+		For me:
+		\begin{itemize}
+			\item Pure problem solving exercise
+			\item Making a simple game
+			\item Some ideas could be extended to 2D and various checkerboard games like draughts
+		\end{itemize}
+	\end{frame}	
+	
 \section{Design}
 	\begin{frame}
 		\frametitle{Design: Breaking it down}
@@ -110,7 +120,7 @@
 			\item However, continued efforts revealed a best case algorithm
 		\finblt
 		\vfill
-		I determined that the minimum number of steps for a board of a given size could be calculated with following definition:
+		A formula for the minimum number of steps:
 		\[
 		f(n) = 
 			\begin{cases} 
@@ -126,18 +136,15 @@
 		\frametitle{Design: The Algorithm I - Conditions and Rules}
 		\textbf{Starting conditions:} 
 		\begin{itemize}
-		\item The board is set with the hole in the middle
-		\item Pegs on either side will be made of one colour only. 
+		\item Pegs on either side of the space will be made of one colour only. 
 		\item We have a predecided starting direction/colour of which we keep track. 
 		\end{itemize}
-		
-		When determining the next move to be made the algorithm uses the following rules:
+		\vfill
+		\bd{Rules} when determining the next move:
 		\begin{itemize}
-			\item Pieces of the colour on the left, can only make moves to the right, and vice versa
-			\item Thus the current direction of moves is tied to the colour
+			\item Each colour can only move in one direction
 			\item Prioritize moves of size two, then one. 
-			\item If no move can be made in the current direction, change direction
-			\item Direction is stored simply as +1 or -1. 
+			\item If no moves change direction
 		\end{itemize}
 		
 	\end{frame}
@@ -146,7 +153,7 @@
 		\frametitle{Design: The Algorithm II - The Pseudocode}
 		The solving loop:
 		\begin{itemize}
-			\item[] while (!finished)
+			\item[] while (not finished)
 			\begin{itemize}
 				\item[] nextMove()
 			\end{itemize}		
@@ -184,11 +191,11 @@
 		\begin{columns}[T]
 			\begin{column}{.5\textwidth}
 				\begin{block}{Another pattern}
-				Having run my algorithm a number of times and printing the board with each step, 
-				this symmetric zigzag pattern becomes apparent. \\\medskip
-				My solution uses the hole as a reference frame and ignores everything outside
-				of that frame. If instead I took the perspective of the board as a whole I would 
-				have taken this approach
+				When running the program 
+				this symmetric zigzag pattern becomes apparent.
+				\\\bigskip
+				I framed my logic around the space. Looking at the board as a whole 
+				may have led to this approach. 
 				\end{block}
 			\end{column}
 			
@@ -229,9 +236,7 @@
 		\frametitle{Limitations \& Future Work}
 		Limitations
 		\blt
-			\item The algorithm does not solve the puzzle for an incomplete non-optimal solution. \\
-			\tab i.e. if the algorithm was tasked finishing a game in which someone had made a move which
-			 would not lead to a solution in the minimum number of steps, it would fail
+			\item The algorithm does not solve the puzzle given an incomplete non-optimal solution. 
 		\finblt
 		
 		Future Work
@@ -249,12 +254,12 @@
 
 		\blt
 			\item Need to step back and look at the bigger picture more often. 
-			\item Sometimes miss 
-			more obvious patterns by breaking things down too quickly.
+			\item Sometimes miss patterns by breaking things down too quickly.
 			\vfill
-			\item I used this assignment as a vehicle to learn about the Graphics2D library in Java. 
-			\item In the process I learned about key bindings, mouse listeners and even a little bit about 
+			\item Graphics2D library in Java. 
+			\item In the process I learned about key bindings, mouse listeners,  
 			threads and concurrency. 
+			\item Made better of use of Github for version control.
 		\finblt
 		
 
@@ -269,9 +274,8 @@
 			\blt
 				\item multithreading
 				\item resource locking
-				\item synchronisation
-			\finblt 
-			and more to tackle before I would consider myself to be approaching competency in that area. 
+				\item synchronisation and more
+			\finblt  
 			\item I toyed with animating the blocks moving to each new location. I feel it was 
 			feasible but (as far as I could tell) I would have had to change my implementation of the 
 			pegboard class to make it work effectively. 
@@ -293,6 +297,23 @@
 			\item Oracle Java Documentation, \ita{How to Use Key Bindings, 2015}[Online]. Available from: 
 			http://docs.oracle.com/javase/tutorial/uiswing/misc/keybinding.html [Last Accessed 23 April 2015]
 		\finblt
+	\end{frame}
+
+\section{Appendix}
+	
+	\begin{frame}
+	\frametitle{Minimum moves}
+		Non recursive definition of the minimum moves function:
+		\[
+			(floor(\frac{n}{2}) + 1)^2 - 1
+		\]
+		where n is the number of spaces on the board, is odd and $\ge$ 3.
+	\end{frame}
+	\begin{frame}
+	\frametitle{Board Size vs. Moves}
+		\begin{figure}
+		\includegraphics[width = 10cm]{pegboardbvm}
+		\end{figure}
 	\end{frame}
 
 \end{document}

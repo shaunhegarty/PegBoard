@@ -3,8 +3,6 @@
 package pegboard;
 
 import java.awt.event.ActionEvent;
-
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -24,8 +22,7 @@ import javax.swing.SwingUtilities;
  * The board can be solved by clicking the Solve button.
  * The board can be resized by pressing up or down on the keyboard.
  * 
- * @author Shaun Hegarty
- * 
+ * @author Shaun Hegarty  14212390
  *
  */
 		

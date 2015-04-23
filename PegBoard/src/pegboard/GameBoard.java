@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  * This class also sets up the mouse listeners, places and colours 
  * the individual components
  * 
- * @author Shaun Hegarty
+ * @author Shaun Hegarty  14212390
  *
  */
 @SuppressWarnings("serial")
@@ -184,8 +184,7 @@ public class GameBoard extends JPanel {
 					//rectangles attempt to move it to the space
 					System.out.println(game.attemptMove(i));
 					repaint();
-					game.isFinished();
-					
+					game.isFinished();					
 					//move peg to empty space if possible
 				}
 			}
@@ -231,8 +230,7 @@ public class GameBoard extends JPanel {
 						//Delay when the 
 						Thread.sleep(timePerMove);
 					}					
-				} catch (InterruptedException ex){}
-				
+				} catch (InterruptedException ex){}				
 			}
 		}
 

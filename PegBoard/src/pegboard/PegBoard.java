@@ -1,4 +1,5 @@
 /*Screencast https://youtu.be/aIoD-PvHgU8 */
+/*Github https://github.com/shaunhegarty/PegBoard/tree/master/PegBoard */
 
 package pegboard;
 
@@ -11,12 +12,9 @@ import java.io.IOException;
  * provide a full solution, make individual moves and return various
  * pieces of information about the state of the board
  * 
- * @author Shaun Hegarty
+ * @author Shaun Hegarty 14212390
  *
  */
-
-
-
 public class PegBoard {
 	
 	////// INSTANCE VARIABLES //////////
@@ -215,10 +213,7 @@ public class PegBoard {
 		
 		else {
 			changeDirection();
-		}   	
-    	
-
-    	
+		}          	
     	
     	/*OLD LOGIC, partially works but not optimal when it does
     	 *The way the move method works has also changed 
@@ -273,8 +268,7 @@ public class PegBoard {
 			if(board[i] != direction){    			
 				return false;
 			}
-		}
-		
+		}		
 		return true;
 	}
 
@@ -399,7 +393,5 @@ public class PegBoard {
      */
     public int getMinMoves(){
     	return minMoves;
-    }
-    
+    }    
 }
-
